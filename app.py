@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 app = Flask(__name__)
 load_dotenv() 
 
-GOOGLE_API_KEY = 'AIzaSyAKoOr-E5A5YA6n78UMyXcytwKVV3Yf5_s'
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 if GOOGLE_API_KEY is None:
     raise ValueError("No GOOGLE_API_KEY found in environment variables")
 genai.configure(api_key=GOOGLE_API_KEY)

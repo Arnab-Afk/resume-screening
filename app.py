@@ -28,7 +28,7 @@ def upload_pdf():
             images = pdf2image.convert_from_path(temp_file_path, dpi=200)[:2]
             image_files = []
             num_pages=len(images)
-            model = genai.GenerativeModel("gemini-1.5-flash-latest",
+            model = genai.GenerativeModel("gemini-1.5-pro",
                                 generation_config={"response_mime_type": "application/json"},
                                 system_instruction="You are a resume parser agent you will be provided a image of a resume and just give the details from the resume.")
             prompt = """Provide the name skills and languages and suggestions how this resume can be improved from the image  the 1st image is 1st page and 2nd image is second page of resume:

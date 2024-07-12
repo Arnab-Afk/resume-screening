@@ -19,6 +19,7 @@ genai.configure(api_key=GOOGLE_API_KEY)
 def upload_file():
     if request.method == 'POST':
         file = request.files['file']
+        keywords=request.args.get("keywords")
         if file:
             # Create a temporary file
             temp_file = tempfile.NamedTemporaryFile(delete=False)
@@ -30,10 +31,20 @@ def upload_file():
                 display_name="Starred Repos Content",
                 mime_type="text/markdown"
             )
+            PROMPT="""you are a helper you will be provided a need and you have to search through the data of the starred repos of users and you have to provide the best solution they can use.
+            """
+            PROMPT2="""These are my starred repos tell me something for  {keywords} 
+            """
+            model = genai.GenerativeModel(model_name="models/gemini-1.5-pro" ,
+                                          generation_config={"response_mime_type": "application/json"},
+                                            system_instruction=PROMPT)
+            response = model.generate_content([PROMPT2,md_file])
+            print(response.text)
             # Close and delete the temporary file
             temp_file.close()
             os.unlink(temp_file.name)
-            return jsonify({'message': 'File uploaded successfully', 'md_file': md_file})
+            print(md_file)
+            return jsonify(response.text)
         else:
             return jsonify({'error': 'No file provided'})
 

@@ -8,8 +8,11 @@ import json
 import dataclasses
 import typing_extensions as typing
 from dotenv import load_dotenv
+from flask_cors import CORS
+
 app = Flask(__name__)
 load_dotenv() 
+CORS(app)
 
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 if GOOGLE_API_KEY is None:

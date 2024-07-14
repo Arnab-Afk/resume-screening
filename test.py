@@ -31,11 +31,11 @@ def upload_file():
                 display_name="Starred Repos Content",
                 mime_type="text/markdown"
             )
-            PROMPT="""you are a helper you will be provided a need and you have to search through the data of the starred repos of users and you have to provide the best solution they can use.
+            PROMPT="""you are a helper you will be provided a need and you have to search through the data of the starred repos of user and you have to provide the best solution they can use.
             """
-            PROMPT2="""These are my starred repos tell me something for  {keywords} 
-            """
-            model = genai.GenerativeModel(model_name="models/gemini-1.5-pro" ,
+            PROMPT2 = f"""These are my starred repos tell me the best repos I should use for {keywords} """
+
+            model = genai.GenerativeModel(model_name="models/gemini-1.5-flash-latest" ,
                                           generation_config={"response_mime_type": "application/json"},
                                             system_instruction=PROMPT)
             response = model.generate_content([PROMPT2,md_file])

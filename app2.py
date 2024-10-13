@@ -89,7 +89,7 @@ def upload_pdf():
             prompt = f"""Provide suggestions how this resume can be improved for the specific job role {keywords} and what is required for the specific job role and a overall how much the person is suitable for that role according to his resume.
                         response={{
                         improvement:["improvement1" , improvement2 ....],
-
+                        summary:"summary of the entire report",
                         requirements:["requirement1", "requirement2", ....],
                         overallview:["view1","view2", .....]
                         }}

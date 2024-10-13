@@ -67,7 +67,11 @@ def upload_pdf():
                     img_page1 = genai.upload_file(path=image_files[0], display_name=f"Page 1")
                     raw_response = model.generate_content([prompt , img_page1])
                 print(img_page1)
-                response = json.loads(raw_response.text)
+                try:
+                    response = json.loads(raw_response.text)
+                except json.JSONDecodeError as e:
+                    print("JSONDecodeError:", e)
+                    response = {"error": "Response not in expected JSON format."}
             finally:
                 # Delete temporary files
                 os.remove(temp_file_path)
@@ -185,7 +189,11 @@ def upload_pdf():
                     img_page1 = genai.upload_file(path=image_files[0], display_name=f"Page 1")
                     raw_response = model.generate_content([prompt , img_page1])
                 print(img_page1)
-                response = json.loads(raw_response.text)
+                try:
+                    response = json.loads(raw_response.text)
+                except json.JSONDecodeError as e:
+                    print("JSONDecodeError:", e)
+                    response = {"error": "Response not in expected JSON format."}
             finally:
                 # Delete temporary files
                 os.remove(temp_file_path)

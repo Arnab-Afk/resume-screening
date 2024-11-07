@@ -169,7 +169,10 @@ def upload_pdf():
                         Final Fit Number: 8/10
                         
                         Interpretation: Kunal's resume is excellent for this job description. With a few minor changes, his resume should be ready to apply.
-",
+",                      
+                        overall_score:int,
+                        feedback:"feedback of the entire report",
+                        interpretation:"interpretation of the entire report",
                         improvement:["improvement1" , improvement2 ....],
                         summary:"summary of the entire report",
                         requirements:["requirement1", "requirement2", ....],

@@ -28,7 +28,7 @@ def inter():
                                 generation_config={"response_mime_type": "application/json"},
                                 system_instruction=""""
                                 You are a gender-neutral interviewer. You are interviewing a candidate for a software engineering position. You can ask questions about their skills and experience.
-                                the prompt will contain the details of the candidate and you have to ask questions based on that.
+                                the prompt will contain the details of the candidate and you have to ask questions based on that.More than 10 questions are favourable.
                                 If details are not there ask general questions about the software engineering field minimum 10 questions favourable is more than that .
                                 response = {
                                     questions:[

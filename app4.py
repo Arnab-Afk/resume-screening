@@ -51,7 +51,10 @@ def inter():
     response = json.loads(raw_response.text)
     return response
 
-    
+@app.route("/", methods=["GET"])
+def home():
+    return "Welcome to the home page of the API"
+
 #route which evalutes the questions and ans and gives a score 
 @app.route("/evaluate" , methods=["POST"])
 def eval():

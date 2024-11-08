@@ -51,7 +51,31 @@ def inter():
     response = json.loads(raw_response.text)
     return response
 
-     
+    
+#route which evalutes the questions and ans and gives a score 
+@app.route("/evaluate" , methods=["POST"])
+def eval():
+    prompt = request.json['questions']
+    transcript = request.json['transcript']
+    model= genai.GenerativeModel("gemini-1.5-pro",
+                                generation_config={"response_mime_type": "application/json"},
+                                system_instruction=""""
+                                You are a gender-neutral interviewer. You are interviewing a candidate for a software engineering position. You will be evaluating the questions and answers of the candidate.
+                                the questions and anwers will be in the prompt and you have to evaluate them and give a score based on that.
+                                response = {
+                                    score:int
+                                    questions:[
+                                    {
+                                    question:str,
+                                    answer:str
+                                    }
+                                }
+                                """)
+    raw_response = model.generate_content([prompt ,transcript])
+    response = json.loads(raw_response.text)
+    return response
+
+    
 
 @app.route("/upload_pdf", methods=["POST"])
 def upload_pdf():

@@ -62,6 +62,7 @@ def eval():
                                 system_instruction=""""
                                 You are a gender-neutral interviewer. You are interviewing a candidate for a software engineering position. You will be evaluating the questions and answers of the candidate.
                                 the questions and anwers will be in the prompt and you have to evaluate them and give a score based on that.
+                                answers is given in the string after questions
                                 response = {
                                     score:int
                                     questions:[

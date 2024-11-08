@@ -65,17 +65,20 @@ def eval():
                                 system_instruction=""""
                                 You are a gender-neutral interviewer. You are interviewing a candidate for a software engineering position. You will be evaluating the questions and answers of the candidate.
                                 the questions and anwers will be in the prompt and you have to evaluate them and give a score based on that.
-                                answers is given in the string after questions
+                                answers is given in the string after questions.
+                                
+                                the endline will contain the answers provided by the candidate.
                                 response = {
                                     score:int
                                     questions:[
                                     {
                                     question:str,
-                                    answer:str
+                                    answer_given:str
+                                    actual_answer:str
                                     }
                                 }
                                 """)
-    raw_response = model.generate_content([prompt ,transcript])
+    raw_response = model.generate_content([prompt +transcript])
     response = json.loads(raw_response.text)
     return response
 

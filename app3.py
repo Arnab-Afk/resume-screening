@@ -41,6 +41,28 @@ def recipie():
                                                 }
                                             ],
                                             steps:[step1 , step2 ,....]
+                                        },
+                                        recipie{
+                                            title :str,
+                                            description :str,
+                                            ingredients :[
+                                                {
+                                                    ingredient_name: str,
+                                                    quantity: str
+                                                }
+                                            ],
+                                            steps:[step1 , step2 ,....]
+                                        },
+                                        recipie{
+                                            title :str,
+                                            description :str,
+                                            ingredients :[
+                                                {
+                                                    ingredient_name: str,
+                                                    quantity: str
+                                                }
+                                            ],
+                                            steps:[step1 , step2 ,....]
                                         }
                                     }
                                     """)

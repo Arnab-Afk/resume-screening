@@ -31,10 +31,7 @@ def recipie():
         quantity = request.form.get("quantity")
         
         # Ensure food_item and quantity are of the correct types
-        if not isinstance(food_item, str):
-            return jsonify({"error": "food_item must be a string"}), 400
-        if not isinstance(quantity, str):
-            return jsonify({"error": "quantity must be a string"}), 400
+       
         
         model = genai.GenerativeModel("gemini-1.5-flash", generation_config={"response_mime_type": "application/json"},
                                       system_instruction="""You are a recipie generator bot. you have to suggest recipies based on the letfover item provided in the prompt along with its quantity.
@@ -87,6 +84,10 @@ def recipie():
             return jsonify({"error": "Invalid JSON response from model", "details": str(e)}), 500
         
         return response
+
+
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -19,6 +19,56 @@ if GOOGLE_API_KEY is None:
     raise ValueError("No GOOGLE_API_KEY found in environment variables")
 genai.configure(api_key=GOOGLE_API_KEY)
 
+
+
+@app.route("/recipie" , methods=['POST'])
+def recipie():
+    if request.method=="POST":
+        food_item= request.json['food_item']
+        quantity=request.json['quantity']
+        model=genai.GenerativeModel("gemini-1.5-flash", generation_config={"response_mime_type": "application/json"},
+                                    system_instruction="""You are a recipie generator bot. you have to suggest recipies based on the letfover item provided in the prompt along with its quantity.
+                                    Try to suggest recipies that are easy to make and use the ingredient provided in the prompt. Try to suggest indian recipies first and then move on towards others.
+                                    response={
+                                        recipie{
+                                            title :str,
+                                            description :str,
+                                            ingredients :[
+                                                {
+                                                    ingredient_name: str,
+                                                    quantity: str
+                                                }
+                                            ],
+                                            steps:[step1 , step2 ,....]
+                                        },
+                                        recipie{
+                                            title :str,
+                                            description :str,
+                                            ingredients :[
+                                                {
+                                                    ingredient_name: str,
+                                                    quantity: str
+                                                }
+                                            ],
+                                            steps:[step1 , step2 ,....]
+                                        },
+                                        recipie{
+                                            title :str,
+                                            description :str,
+                                            ingredients :[
+                                                {
+                                                    ingredient_name: str,
+                                                    quantity: str
+                                                }
+                                            ],
+                                            steps:[step1 , step2 ,....]
+                                        }
+                                    }
+                                    """)
+        raw_response= model.generate_content([food_item, quantity])
+        response = json.loads(raw_response.text)
+    return response
+
 @app.route("/upload_pdf", methods=["POST"])
 def upload_pdf():
     if request.method == "POST":

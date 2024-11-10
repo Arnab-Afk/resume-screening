@@ -6,6 +6,7 @@ import tempfile
 import os
 import json
 import dataclasses
+import requests
 import typing_extensions as typing
 from dotenv import load_dotenv
 from flask_cors import CORS
@@ -43,7 +44,7 @@ def analyseFood():
 
 
 VERIFY_TOKEN = "arnab"
-TARGET_ENDPOINT = 'https://resume-screening-2.onrender.com/analyseFood'  # Replace with your target endpoint
+TARGET_ENDPOINT = ''  # Replace with your target endpoint
 
 @app.route('/webhook', methods=['GET', 'POST'])
 def webhook():
@@ -88,6 +89,12 @@ def webhook():
                                     phone_number str
                                  }""")
                     raw_response = model.generate_content([content + wa_id])
+                    response = json.loads(raw_response.text)
+                    food_item = response['food_item']
+                    expiry_date = response['expiry_date']
+                    quantity = response['quantity']
+                    phone_number = response['phone_number']
+                    response = requests.post(TARGET_ENDPOINT, json={food_item: food_item, expiry_date: expiry_date, quantity: quantity, phone_number: phone_number})
                     print(raw_response)
             except (KeyError, IndexError) as e:
                 print(f"Error extracting text body: {e}")

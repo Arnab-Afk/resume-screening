@@ -21,11 +21,17 @@ genai.configure(api_key=GOOGLE_API_KEY)
 
 
 
-@app.route("/recipie" , methods=['POST'])
+@app.route("/recipie", methods=["POST"])
 def recipie():
-    if request.method=="POST":
-        food_item= request.json['food_item']
-        quantity=request.json['quantity']
+    if request.method == "POST":
+        food_item = request.form.get("food_item")
+        quantity = request.form.get("quantity")
+        
+        # Ensure food_item and quantity are of the correct types
+        if not isinstance(food_item, str):
+            return jsonify({"error": "food_item must be a string"}), 400
+        if not isinstance(quantity, str):
+            return jsonify({"error": "quantity must be a string"}), 400
         model=genai.GenerativeModel("gemini-1.5-flash", generation_config={"response_mime_type": "application/json"},
                                     system_instruction="""You are a recipie generator bot. you have to suggest recipies based on the letfover item provided in the prompt along with its quantity.
                                     Try to suggest recipies that are easy to make and use the ingredient provided in the prompt. Try to suggest indian recipies first and then move on towards others.
@@ -65,9 +71,9 @@ def recipie():
                                         }
                                     }
                                     """)
-        raw_response= model.generate_content([food_item, quantity])
+        raw_response = model.generate_content([food_item, quantity])
         response = json.loads(raw_response.text)
-    return response
+        return response
 
 @app.route("/upload_pdf", methods=["POST"])
 def upload_pdf():

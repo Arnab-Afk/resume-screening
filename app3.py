@@ -21,7 +21,80 @@ genai.configure(api_key=GOOGLE_API_KEY)
 
 
 
+#a route which takes string and processes it 
+@app.route("/analyseFood", methods=["POST"])
+def analyseFood():
+    if request.method == "POST":
+        food_item = request.json['food_item']
+        model = genai.GenerativeModel("gemini-1.5-flash",
+                                generation_config={"response_mime_type": "application/json"},
+                                system_instruction="""You are string  analyser bot. You will be provided the details of a food item provided in the prompt.
+                                everything will be provided in the prompt you just have to segregate the details and provide the details in the response.
+                                 response={
+                                    food_item: str,
+                                    expiry_date: str,
+                                    quantity: str,
+                                    phone_number str
+                                 }""")
+        raw_response = model.generate_content([food_item])
+        response = json.loads(raw_response.text)
+    return response
+
+
+
+VERIFY_TOKEN = "arnab"
+TARGET_ENDPOINT = 'https://resume-screening-2.onrender.com/analyseFood'  # Replace with your target endpoint
+
+@app.route('/webhook', methods=['GET', 'POST'])
+def webhook():
+    if request.method == 'GET':
+        # WhatsApp webhook verification
+        token = request.args.get('hub.verify_token')
+        challenge = request.args.get('hub.challenge')
+        if token == VERIFY_TOKEN:
+            return str(challenge), 200
+        else:
+            return "Verification token mismatch", 403
+    
+    if request.method == 'POST':
+        data = request.json
+        
+        if data:
+            print(data)  # Print the entire data for debugging
+            
+            # Extract the text body
+            try:
+                text_body = data['entry'][0]['changes'][0]['value']['messages'][0]['text']['body']
+                print(f"Text Body: {text_body}")
+                
+                # Check if the text body matches the pattern /add something
+                if text_body.startswith('/add '):
+                    content = text_body[5:]  # Extract the content after /add
+                    print(f"Content to add: {content}")
+                    
+                    # Make an HTTP POST request to the target endpoint with the content
+                    model = genai.GenerativeModel("gemini-1.5-flash",
+                                generation_config={"response_mime_type": "application/json"},
+                                system_instruction="""You are string  analyser bot. You will be provided the details of a food item provided in the prompt.
+                                everything will be provided in the prompt you just have to segregate the details and provide the details in the response.
+                                 response={
+                                    food_item: str,
+                                    expiry_date: str,
+                                    quantity: str,
+                                    phone_number str
+                                 }""")
+                    raw_response = model.generate_content([content])
+                    print(raw_response)
+            except (KeyError, IndexError) as e:
+                print(f"Error extracting text body: {e}")
+                return "Error", 400
+        else:
+            print("No data")
+            return "Error", 400
+        
+        return "Success", 200
 # a route which takes in food item and its quantity and gives quick recipies using it
+
 @app.route("/recipie" , methods=['POST'])
 def recipie():
     if request.method=="POST":

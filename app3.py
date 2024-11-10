@@ -65,6 +65,10 @@ def webhook():
             # Extract the text body
             try:
                 text_body = data['entry'][0]['changes'][0]['value']['messages'][0]['text']['body']
+                entry = data['entry'][0]
+                changes = entry['changes'][0]
+                value = changes['value']
+                wa_id = value['contacts'][0]['wa_id']
                 print(f"Text Body: {text_body}")
                 
                 # Check if the text body matches the pattern /add something
@@ -83,7 +87,7 @@ def webhook():
                                     quantity: str,
                                     phone_number str
                                  }""")
-                    raw_response = model.generate_content([content])
+                    raw_response = model.generate_content([content + wa_id])
                     print(raw_response)
             except (KeyError, IndexError) as e:
                 print(f"Error extracting text body: {e}")

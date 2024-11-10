@@ -41,7 +41,7 @@ def recipie():
                                     system_instruction="""You are a recipie generator bot. you have to suggest recipies based on the letfover item provided in the prompt along with its quantity.
                                     Try to suggest multiple recipies that are easy to make and use the ingredient provided in the prompt. Try to suggest indian recipies first and then move on towards others.minimum 3 recipies are required.
                                     response={
-                                        recipie1{
+                                        {
                                             title :str,
                                             description :str,
                                             ingredients :[
@@ -52,7 +52,7 @@ def recipie():
                                             ],
                                             steps:[step1 , step2 ,....]
                                         },
-                                        recipie2{
+                                        {
                                             title :str,
                                             description :str,
                                             ingredients :[
@@ -63,7 +63,7 @@ def recipie():
                                             ],
                                             steps:[step1 , step2 ,....]
                                         },
-                                        recipie3{
+                                        {
                                             title :str,
                                             description :str,
                                             ingredients :[

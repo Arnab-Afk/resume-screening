@@ -152,7 +152,7 @@ def recipie():
                                     """)
         raw_response= model.generate_content([food_item, quantity])
         response = json.loads(raw_response.text)
-    return response
+    return raw_response
 
 @app.route("/upload_pdf", methods=["POST"])
 def upload_pdf():

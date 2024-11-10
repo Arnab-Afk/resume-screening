@@ -21,6 +21,74 @@ genai.configure(api_key=GOOGLE_API_KEY)
 
 
 
+@app.route("/recipies", methods=["POST"])
+def recipies():
+    if request.method == "POST":
+        food_item = request.json["food_item"]
+        quantity = request.json["quantity"]
+
+        # Ensure food_item and quantity are of the correct types
+        if not isinstance(food_item, str):
+            return jsonify({"error": "Invalid food item"}), 400
+        if not isinstance(quantity, int):
+            return jsonify({"error": "Invalid quantity"}), 400
+        # Ensure quantity is positive
+        if quantity <= 0:
+            return jsonify({"error": "Quantity must be positive"}), 400
+        # Ensure food_item is not empty
+        if not food_item:
+            return jsonify({"error": "Food item cannot be empty"}), 400
+        # Ensure food_item is a string
+        if not isinstance(food_item, str):
+            return jsonify({"error": "Food item must be a string"}), 400
+        
+        model=genai.GenerativeModel("gemini-1.5-flash", generation_config={"response_mime_type": "application/json"},system_instruction="""You are a recipie generator bot. you have to suggest recipies based on the letfover item provided in the prompt along with its quantity.
+                                    Try to suggest recipies that are easy to make and use the ingredient provided in the prompt. Try to suggest indian recipies first and then move on towards others.
+                                    response={
+                                        recipie1{
+                                            title :str,
+                                            description :str,
+                                            ingredients :[
+                                                {
+                                                    ingredient_name: str,
+                                                    quantity: str
+                                                }
+                                            ],
+                                            steps:[step1 , step2 ,....]
+                                        },
+                                        recipie2{
+                                            title :str,
+                                            description :str,
+                                            ingredients :[
+                                                {
+                                                    ingredient_name: str,
+                                                    quantity: str
+                                                }
+                                            ],
+                                            steps:[step1 , step2 ,....]
+                                        },
+                                        recipie3{
+                                            title :str,
+                                            description :str,
+                                            ingredients :[
+                                                {
+                                                    ingredient_name: str,
+                                                    quantity: str
+                                                }
+                                            ],
+                                            steps:[step1 , step2 ,....]
+                                        }
+                                    }
+                                    """)
+        
+        raw_response = model.generate_content([food_item, quantity])
+        response = json.loads(raw_response.text)
+        return response
+                                    
+
+
+
+
 @app.route("/recipie", methods=["POST"])
 def recipie():
     if request.method == "POST":

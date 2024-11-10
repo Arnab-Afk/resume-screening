@@ -1,4 +1,3 @@
-
 from flask import Flask, request, jsonify
 import pdf2image
 import io
@@ -28,56 +27,65 @@ def home():
 @app.route("/recipie", methods=["POST"])
 def recipie():
     if request.method == "POST":
-        food_item = request.json["food_item"]
-        quantity = request.json["quantity"]
+        food_item = request.form.get("food_item")
+        quantity = request.form.get("quantity")
         
         # Ensure food_item and quantity are of the correct types
-        if not food_item or not quantity:
-            return jsonify({"error": "food_item must be a string", 
-                            }), 400
+        if not isinstance(food_item, str):
+            return jsonify({"error": "food_item must be a string"}), 400
         if not isinstance(quantity, str):
             return jsonify({"error": "quantity must be a string"}), 400
-        model=genai.GenerativeModel("gemini-1.5-flash", generation_config={"response_mime_type": "application/json"},
-                                    system_instruction="""You are a recipie generator bot. you have to suggest recipies based on the letfover item provided in the prompt along with its quantity.
-                                    Try to suggest multiple recipies that are easy to make and use the ingredient provided in the prompt. Try to suggest indian recipies first and then move on towards others.minimum 3 recipies are required.
-                                    response={
-                                        {
-                                            title :str,
-                                            description :str,
-                                            ingredients :[
-                                                {
-                                                    ingredient_name: str,
-                                                    quantity: str
-                                                }
-                                            ],
-                                            steps:[step1 , step2 ,....]
-                                        },
-                                        {
-                                            title :str,
-                                            description :str,
-                                            ingredients :[
-                                                {
-                                                    ingredient_name: str,
-                                                    quantity: str
-                                                }
-                                            ],
-                                            steps:[step1 , step2 ,....]
-                                        },
-                                        {
-                                            title :str,
-                                            description :str,
-                                            ingredients :[
-                                                {
-                                                    ingredient_name: str,
-                                                    quantity: str
-                                                }
-                                            ],
-                                            steps:[step1 , step2 ,....]
-                                        }
-                                    }
-                                    """)
+        
+        model = genai.GenerativeModel("gemini-1.5-flash", generation_config={"response_mime_type": "application/json"},
+                                      system_instruction="""You are a recipie generator bot. you have to suggest recipies based on the letfover item provided in the prompt along with its quantity.
+                                      Try to suggest multiple recipies that are easy to make and use the ingredient provided in the prompt. Try to suggest indian recipies first and then move on towards others.minimum 3 recipies are required.
+                                      response={
+                                          {
+                                              title :str,
+                                              description :str,
+                                              ingredients :[
+                                                  {
+                                                      ingredient_name: str,
+                                                      quantity: str
+                                                  }
+                                              ],
+                                              steps:[step1 , step2 ,....]
+                                          },
+                                          {
+                                              title :str,
+                                              description :str,
+                                              ingredients :[
+                                                  {
+                                                      ingredient_name: str,
+                                                      quantity: str
+                                                  }
+                                              ],
+                                              steps:[step1 , step2 ,....]
+                                          },
+                                          {
+                                              title :str,
+                                              description :str,
+                                              ingredients :[
+                                                  {
+                                                      ingredient_name: str,
+                                                      quantity: str
+                                                  }
+                                              ],
+                                              steps:[step1 , step2 ,....]
+                                          }
+                                      }"""
+                                     )
+        
         raw_response = model.generate_content([food_item, quantity])
-        response = json.loads(raw_response.text)
+        
+        # Print raw_response.text for debugging
+        print(raw_response.text)
+        
+        try:
+            response = json.loads(raw_response.text)
+        except json.JSONDecodeError as e:
+            return jsonify({"error": "Invalid JSON response from model", "details": str(e)}), 500
+        
         return response
 
 if __name__ == "__main__":

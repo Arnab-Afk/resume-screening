@@ -24,12 +24,13 @@ genai.configure(api_key=GOOGLE_API_KEY)
 @app.route("/recipie", methods=["POST"])
 def recipie():
     if request.method == "POST":
-        food_item = request.form.get("food_item")
-        quantity = request.form.get("quantity")
+        food_item = request.json["food_item"]
+        quantity = request.json["quantity"]
         
         # Ensure food_item and quantity are of the correct types
         if not food_item or not quantity:
-            return jsonify({"error": "food_item must be a string"}), 400
+            return jsonify({"error": "food_item must be a string", 
+                            }), 400
         if not isinstance(quantity, str):
             return jsonify({"error": "quantity must be a string"}), 400
         model=genai.GenerativeModel("gemini-1.5-flash", generation_config={"response_mime_type": "application/json"},

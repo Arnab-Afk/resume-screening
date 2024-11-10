@@ -28,7 +28,7 @@ def recipie():
         quantity = request.form.get("quantity")
         
         # Ensure food_item and quantity are of the correct types
-        if not isinstance(food_item, str):
+        if not food_item or not quantity:
             return jsonify({"error": "food_item must be a string"}), 400
         if not isinstance(quantity, str):
             return jsonify({"error": "quantity must be a string"}), 400

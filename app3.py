@@ -94,7 +94,7 @@ def webhook():
                     expiry_date = response['expiry_date']
                     quantity = response['quantity']
                     phone_number = response['phone_number']
-                    response = requests.post(TARGET_ENDPOINT, json={food_item: food_item, expiry_date: expiry_date, quantity: quantity, phone_number: phone_number})
+                    response = requests.post("https://annapurna.featurehive.live/v1/household/add-products", json={food_item: food_item, expiry_date: expiry_date, quantity: quantity, phone_number: phone_number})
                     print(raw_response)
             except (KeyError, IndexError) as e:
                 print(f"Error extracting text body: {e}")

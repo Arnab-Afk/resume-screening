@@ -3,9 +3,14 @@ import google.generativeai as genai
 import os
 
 app = Flask(__name__)
-KEY=os.getenv('API_KEY')
+
+# Get the API key from environment variables
+API_KEY = os.getenv('API_KEY')
+if not API_KEY:
+    raise ValueError("No API_KEY found in environment variables")
+
 # Configure the Generative AI API
-genai.configure(api_key=KEY)
+genai.configure(api_key=API_KEY)
 
 # Define the route for file upload
 @app.route('/upload', methods=['POST'])
@@ -21,7 +26,11 @@ def upload_file():
         return jsonify({"error": "No selected file"}), 400
 
     # Save the file temporarily
-    file_path = os.path.join("uploads", file.filename)
+    uploads_dir = os.path.join(os.getcwd(), "uploads")
+    if not os.path.exists(uploads_dir):
+        os.makedirs(uploads_dir)
+
+    file_path = os.path.join(uploads_dir, file.filename)
     file.save(file_path)
 
     try:
@@ -33,7 +42,7 @@ def upload_file():
         model = genai.GenerativeModel("gemini-1.5-flash")
 
         # Generate content based on the audio file
-        result = model.generate_content([myfile, " is this corerct grammar ? if not fix it and  please dont insert any asterisks or special characters."])
+        result = model.generate_content([myfile, "Is this correct grammar? If not, fix it and please don't insert any asterisks or special characters."])
         print(f"{result.text=}")
 
         # Return the result
@@ -48,9 +57,5 @@ def upload_file():
             os.remove(file_path)
 
 if __name__ == '__main__':
-    # Ensure the uploads directory exists
-    if not os.path.exists("uploads"):
-        os.makedirs("uploads")
-
     # Run the Flask app
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)
